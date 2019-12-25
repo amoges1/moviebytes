@@ -1,6 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs')
 const auth = require('../../middleware/auth')
+const jwt = require('jsonwebtoken')
+const config = require('config')
+const {
+    check,
+    validationResult
+} = require('express-validator')
+
 const User = require('../../models/User')
 // @route   GET api/auth
 // @desc    Test route
@@ -17,4 +25,50 @@ router.get('/', auth, async (req, res) => {
     }
 })
 
+// @route   POST api/auth
+// @desc    Authenticate User & Get Token
+// @access  Public
+router.post('/', [
+    //based on express validator check doc
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists()
+], async (req, res) => {
+    const errors = validationResult(req) //compare from above
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        }) // bad request
+    }
+
+    const { email, password } = req.body
+
+    try {
+
+        // Find user
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if (!isMatch) {
+            return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
+        }
+        
+        const payload = {
+            user: {
+                id: user.id                
+            }
+        }
+
+        jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 36000 }, (err, token) => { // 3600 = 1 hour, optional
+            if(err) throw err;
+            res.json({token})
+        }) 
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).send('Server error');
+    }
+})
 module.exports = router;
