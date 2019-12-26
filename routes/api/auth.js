@@ -10,6 +10,7 @@ const {
 } = require('express-validator')
 
 const User = require('../../models/User')
+
 // @route   GET api/auth
 // @desc    Test route
 // @access  Public
@@ -55,7 +56,7 @@ router.post('/', [
         if (!isMatch) {
             return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
         }
-        
+
         const payload = {
             user: {
                 id: user.id                
