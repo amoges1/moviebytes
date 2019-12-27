@@ -1,17 +1,15 @@
 const mongoose = require('mongoose')
 
 const MovieSchema = new mongoose.Schema({
+    _id : false,
     title: {
-        type: String,
-        required: true
+        type: String
     },
     released: {
-        type: String,
-        required: true
+        type: String
     },
     runtime: {
-        type: String,
-        required: true
+        type: String
     },
     rated: {
         type: String
