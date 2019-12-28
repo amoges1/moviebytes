@@ -26,7 +26,6 @@ router.get('/me', auth, async (req, res) => {
 // @route   POST api/profile/
 // @desc    Create/update user profile
 // @access  Private
-
 router.post('/', auth, async (req, res) => {
     // extract body submission
     const {
@@ -74,4 +73,39 @@ router.post('/', auth, async (req, res) => {
         res.status(500).send('Server Error')
     }
 })
+
+// @route   POST api/profile/
+// @desc    Get all profiles
+// @access  Public
+router.get('/', async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate('user', ['name'])
+        res.json(profiles)
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+})
+
+// @route   POST api/profile/user/:user_id
+// @desc    Get profile by user ID
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.params.user_id}).populate('user', ['name'])
+        //User id is valid Object ID e.g. 3514bvg124f
+        if(!profile) return res.status(400).json({ msg: 'Profile not found'})
+        res.json(profile)
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == 'ObjectId') {
+            // user_ID is not an Object ID e.g. 1
+            return res.status(400).json({ msg: 'Profile not found'})
+        }
+        res.status(500).send('Server Error')
+    }
+})
+
+
+
 module.exports = router;
