@@ -1,30 +1,41 @@
 const mongoose = require('mongoose')
 
 const MovieSchema = new mongoose.Schema({
-    _id : false,
-    title: {
+    Title: {
         type: String
     },
-    released: {
+    Released: {
         type: String
     },
-    runtime: {
+    Runtime: {
         type: String
     },
-    rated: {
+    Rated: {
         type: String
     },
-    director: {
+    Director: {
         type: String
     },
-    plot: {
+    Plot: {
         type: String
     },
-    poster: {
+    Poster: {
         type: String
     },
-    metascore: {
+    Ratings: {
+        type: Array
+    },
+    Metascore: {
         type: Number
+    },
+    Production: {
+        type: String
+    },
+    Watched: {
+        type: Boolean
+    },
+    Opinion: {
+        type: String
     }
 })
 
@@ -37,9 +48,6 @@ const ProfileSchema = new mongoose.Schema({
         type: String
     },
     movies: [MovieSchema],
-    friends: {
-        type: Array
-    },
     social: {
         twitter: {
             type:String

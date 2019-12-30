@@ -107,7 +107,7 @@ router.get('/user/:user_id', async (req, res) => {
 })
 
 // @route   DELETE api/profile/
-// @desc    Delete profile, user & posts
+// @desc    Delete profile & user
 // @access  Private
 router.delete('/', auth, async (req, res) => {
     try {
@@ -123,5 +123,75 @@ router.delete('/', auth, async (req, res) => {
     }
 })
 
+// @route   PUT api/profile/addmovie
+// @desc    Add movies to user's profile
+// @access  Private
+router.put('/movies', [auth, [
+    check('Watched', 'Did you watch it?').not().isEmpty()
+]], async (req, res) => {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()})
+    }
+    
+    const {
+        Title,
+        Released,
+        Runtime,
+        Rated,
+        Director,
+        Plot,
+        Poster,
+        Ratings,
+        Metascore,
+        Production,
+        Watched,
+        Opinion
+    } = req.body
+    
+    const movie = {
+        Title,
+        Released,
+        Runtime,
+        Rated,
+        Director,
+        Plot,
+        Poster,
+        Ratings,
+        Metascore,
+        Production,
+        Watched,
+        Opinion
+    }
 
+    try {
+        //find user profile
+        const profile = await Profile.findOne({user: req.user.id})
+        profile.movies.unshift(movie)
+        await profile.save();
+        res.json(profile)
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+    }
+})
+
+// @route   DELETE api/profile/movies/:mov_id
+// @desc    Delete movie from user's profile
+// @access  Private
+router.delete('/movies/:mov_id', auth, async(req, res) => {
+    try {
+        const profile = await Profile.findOne({user: req.user.id})
+
+        // Get remove index by mapping movies' ids, then find indexOf desired mov_id
+        const removeIndex = profile.movies.map(item => item.id).indexOf(req.params.mov_id)
+        
+        profile.movies.splice(removeIndex, 1); //removeIndex found
+        await profile.save()
+        res.json(profile)
+    } catch (err) {
+        console.error(err.message);
+        
+    }
+})
 module.exports = router;
