@@ -31,7 +31,6 @@ router.post('/', auth, async (req, res) => {
     const {
         location,
         movies,
-        friends,
         twitter,
         facebook,
         instagram,
@@ -42,7 +41,6 @@ router.post('/', auth, async (req, res) => {
     const profileFields = {};
     profileFields.user = req.user.id;
     if(location) profileFields.location = location
-    if(friends) profileFields.friends = friends 
     if(movies) profileFields.movies = movies
 
     // Build social object
@@ -135,18 +133,8 @@ router.put('/movies', [auth, [
     }
     
     const {
-        Title,
-        Released,
-        Runtime,
-        Rated,
-        Director,
-        Plot,
-        Poster,
-        Ratings,
-        Metascore,
-        Production,
-        Watched,
-        Opinion
+        Title, Released, Runtime, Rated, Director, Plot, Poster,
+        Ratings, Metascore, Production, Watched, Review, Score
     } = req.body
     
     const movie = {
@@ -161,7 +149,8 @@ router.put('/movies', [auth, [
         Metascore,
         Production,
         Watched,
-        Opinion
+        Review,
+        Score
     }
 
     try {
@@ -173,6 +162,39 @@ router.put('/movies', [auth, [
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error')
+    }
+})
+
+// @route   PUT api/profile/movies/:mov_id
+// @desc    Update movie from user's profile
+// @access  Private
+router.put('/movies/:mov_id', [ auth, [
+    check('Watched', 'Did you watch it?').not().isEmpty(),
+]], async(req, res) => {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        return res.status(400).json({errors: errors.array()})
+    }
+
+    const {
+        Watched,
+        Review,
+        Score
+    } = req.body
+
+    try {
+        const profile = await Profile.findOne({user: req.user.id})
+        
+        const updateIndex = profile.movies.map(item => item.id).indexOf(req.params.mov_id)
+        profile.movies[updateIndex]["Watched"] = Watched 
+        profile.movies[updateIndex]["Review"] = Review 
+        profile.movies[updateIndex]["Score"] = Score 
+        
+        await profile.save()
+        res.json(profile)
+    } catch (err) {
+        console.error(err.message);
+        
     }
 })
 

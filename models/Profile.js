@@ -34,9 +34,13 @@ const MovieSchema = new mongoose.Schema({
     Watched: {
         type: Boolean
     },
-    Opinion: {
+    Review: {
         type: String
+    },
+    Score : {
+        type: Number
     }
+    
 })
 
 const ProfileSchema = new mongoose.Schema({
