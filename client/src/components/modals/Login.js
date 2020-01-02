@@ -33,7 +33,7 @@ const Login = () => {
                                 <label htmlFor="password">Password:</label>
                                 <input type="password" className="form-control" placeholder="Enter password" id="spassword" name="password" value={password} onChange={ e=> onChange(e)} required/>
                             </div>
-                            <div className="modal-footer" style={{background:"#F56600"}}>
+                            <div className="modal-footer p-0" style={{background:"#F56600"}}>
                                 <button type="submit" className="btn btn-primary btn-success">Login</button>
                             </div>
                         </form>
