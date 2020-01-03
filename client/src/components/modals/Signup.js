@@ -1,7 +1,13 @@
 import React, {useState} from 'react';
+import { connect } from 'react-redux';
+import { setAlert } from '../../actions/alert'
+import PropTypes from 'prop-types' //
+import Alert from '../layout/Alert';
+
 //import axios from 'axios';
 
-const Signup = () => {
+//destructed from props
+const Signup = ({setAlert}) => {
     //formData to store all field values (state)
     //setForm to update formdata (update state)
     const [formData, setFormData] = useState({
@@ -19,7 +25,7 @@ const Signup = () => {
         //state accessible from const {} = formdata
         e.preventDefault();
         if(password !== password2) {
-            console.log("Passwords don't match");
+            setAlert("Passwords don't match", 'danger');
         } else {
             console.log('SUCCESS');
             
@@ -54,6 +60,7 @@ const Signup = () => {
 
                     <div className="modal-body">
                         <form  onSubmit={e => onSubmit(e)}>
+                            <Alert />
                             <div className="form-group">
                                 <label htmlFor="name">Name:</label>
                                 <input type="name" className="form-control" placeholder="Enter name" id="name" name="name" value={name} onChange={e => onChange(e)} required/>
@@ -83,4 +90,10 @@ const Signup = () => {
     )
 }
 
-export default Signup
+//after importing propTypes
+Signup.propTypes = {
+    //PropType : PropType.TypeofPropType.isrequired?
+    setAlert: PropTypes.func.isRequired
+}
+//allow to use props.setAlert in component
+export default connect(null, { setAlert })(Signup);
