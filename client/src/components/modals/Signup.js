@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert'
+import { register } from '../../actions/auth'
 import PropTypes from 'prop-types' //
 import Alert from '../layout/Alert';
 
 //import axios from 'axios';
 
 //destructed from props
-const Signup = ({setAlert}) => {
+const Signup = ({setAlert, register, isAuthed }) => {
     //formData to store all field values (state)
     //setForm to update formdata (update state)
     const [formData, setFormData] = useState({
@@ -28,7 +30,7 @@ const Signup = ({setAlert}) => {
             setAlert("Passwords don't match", 'danger');
         } else {
             console.log('SUCCESS');
-            
+            register({ name, email, password })
             // Below is used if not using Redux action
             // const newUser = {
             //     name, email, password
@@ -48,6 +50,11 @@ const Signup = ({setAlert}) => {
             //     console.error();
             // }
         }
+    }
+    if(isAuthed) {
+        const modalBackdrop = document.getElementsByClassName("modal-backdrop show")
+        modalBackdrop[0].removeAttribute("class")
+        return <Redirect to="/home" />
     }
     return (
         <div className="modal" id="signup">
@@ -82,18 +89,22 @@ const Signup = ({setAlert}) => {
                             </div>
                         </form>
                     </div>
-                
-
                 </div>
             </div>
         </div> 
     )
 }
 
-//after importing propTypes
+//after importing propTypes, always add here if added in connect
 Signup.propTypes = {
     //PropType : PropType.TypeofPropType.isrequired?
-    setAlert: PropTypes.func.isRequired
+    setAlert: PropTypes.func.isRequired,
+    register: PropTypes.func.isRequired,
+    isAuthed: PropTypes.bool
 }
+
+const mapStateToProps = state => ({
+    isAuthed: state.auth.isAuthed //refers to /reducers/initStates
+})
 //allow to use props.setAlert in component
-export default connect(null, { setAlert })(Signup);
+export default connect(mapStateToProps, { setAlert, register })(Signup);

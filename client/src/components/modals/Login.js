@@ -1,6 +1,12 @@
 import React,  {useState} from 'react'
+import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
+import { login } from '../../actions/auth'
+import Alert from '../layout/Alert';
 
-const Login = () => {
+//login is prop passed
+const Login = ({login, isAuthed }) => {
     const [formData, setFormData] = useState({
         email:'',//set initState
         password: '',
@@ -12,8 +18,15 @@ const Login = () => {
 
     const onSubmit = async e => {
         e.preventDefault()
+        login(email, password)
     }
 
+    // Redirect if logged in
+    if(isAuthed) {
+        const modalBackdrop = document.getElementsByClassName("modal-backdrop show")
+        modalBackdrop[0].removeAttribute("class")
+        return <Redirect to="/home" />
+    }
     return (
         <div className="modal" id="login">
             <div className="modal-dialog">
@@ -25,6 +38,7 @@ const Login = () => {
     
                     <div className="modal-body">
                         <form onSubmit={ e => onSubmit(e)}>
+                            <Alert />
                             <div className="form-group">
                                 <label htmlFor="email">Email address:</label>
                                 <input type="email" className="form-control" placeholder="Enter email" id="semail" name="email" value={email} onChange={ e=> onChange(e)} required/>
@@ -45,4 +59,13 @@ const Login = () => {
     )
 }
 
-export default Login
+Login.propTypes = {
+    login: PropTypes.func.isRequired,
+    isAuthed: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+    isAuthed: state.auth.isAuthed //refers to /reducers/initStates
+})
+
+export default connect(mapStateToProps, { login })(Login)
