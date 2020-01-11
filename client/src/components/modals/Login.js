@@ -23,16 +23,20 @@ const Login = ({login, isAuthed }) => {
 
     // Redirect if logged in
     if(isAuthed) {
-        const modalBackdrop = document.getElementsByClassName("modal-backdrop show")
-        modalBackdrop[0].removeAttribute("class")
-        return <Redirect to="/home" />
+        try {
+            const modalBackdrop = document.getElementsByClassName("modal-backdrop show")
+            modalBackdrop[0].removeAttribute("class")
+            return <Redirect to="/home" />
+        } catch (err) {
+            return <Redirect to="/home" />
+        }
     }
     return (
         <div className="modal" id="login">
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header" style={{background:"#F56600"}}>
-                        <h4 className="modal-title text-white">Create Account</h4>
+                        <h4 className="modal-title text-white">Login</h4>
                         <button type="button" className="close text-white" data-dismiss="modal">&times;</button>
                     </div>
     

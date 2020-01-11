@@ -52,9 +52,13 @@ const Signup = ({setAlert, register, isAuthed }) => {
         }
     }
     if(isAuthed) {
-        const modalBackdrop = document.getElementsByClassName("modal-backdrop show")
-        modalBackdrop[0].removeAttribute("class")
-        return <Redirect to="/home" />
+        try {
+            const modalBackdrop = document.getElementsByClassName("modal-backdrop show")
+            modalBackdrop[0].removeAttribute("class")
+            return <Redirect to="/home" />
+        } catch (err) {
+            return <Redirect to="/home" />
+        }
     }
     return (
         <div className="modal" id="signup">

@@ -1,5 +1,6 @@
 import React from 'react'
 import starwars_check from '../img/starwars_check.jpg'
+
 const Home = () => {
     return (
         <div>
@@ -26,7 +27,7 @@ const Home = () => {
                                     </h6>
                                 </div>
                             </div>
-                            <div className="card-body">
+                            <div className="card-body" style={{backgroundImage: `${starwars_check}`}}>
                                 <div className="row">
                                     <div className="container">
                                         <img src={starwars_check} width="100rem" alt="image" />
