@@ -4,5 +4,6 @@ import auth from './auth'
 //https://redux.js.org/api/combinereducers/
 export default combineReducers({
     alert,
-    auth
+    auth,
+    movies
 })
