@@ -1,11 +1,7 @@
 import React, {useState} from 'react'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
-
-
 import SResult from './SResult'
-
-import axios from 'axios'
 import { setAlert } from '../../actions/alert';
 import Alert from '../layout/Alert';
 

@@ -5,19 +5,28 @@ import {
     DELETE_MOVIE,
     UPDATE_REVIEW
 } from './types';
+import setAuthToken from '../utils/setAuthToken'
 
 // Add Movie
-export const addMovie = (movie) => async dispatch => {
+export const addMovieToUser = (movie) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token)
+    }
     const config = {
         headers: {
             'Content-Type': 'application/json'
         }
     }
+    // console.log("ADD MOVIE: ", movie);
+    
     const body = JSON.stringify({movie})
+    
     try {
         //set up API endpoint to receive movie information,
         //receive full movie list array to pass to dispatch
-        const res = await axios.post('/api/auth', body, config)
+        const res = await axios.put('/api/profile/addmovie', body, config)
+        // console.log("this is: ",res.data);
+        
 
         dispatch({
             type: ADD_MOVIE,

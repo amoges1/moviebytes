@@ -1,18 +1,13 @@
 import React from 'react'
-import axios from 'axios'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux';
+import { addMovieToUser } from '../../actions/movies'
 
-const addMovieToUser = (e) => {
-    e.preventDefault()
-    console.log(e.target.dataset)
-    const { title, poster, year } = e.target.dataset
-    
-    //Send API call here
-    axios
-    
-}
 
-const SResult = ({movie, index}) => {
 
+
+
+const SResult = ({movie, index, addMovieToUser}) => {
     
     return (
         <div className="p-1" >
@@ -26,12 +21,12 @@ const SResult = ({movie, index}) => {
                 </div>
                 <div className="card-body">
                     <div className="row text-center">
-                        <img src={`${movie.Poster}`}  style={{width: "15rem"}}className="thumbnail img-responsive" />
+                        <img src={`${movie.Poster}`} alt="" style={{width: "15rem"}} className="thumbnail img-responsive" />
                     </div>
                 </div>
                 <div className="card-footer" style={{background:"#F56600"}}>
                     <h4 className="d-inline">
-                        <button className="btn btn-primary btn-sm font-weight-bold float-right" data-title={`${movie.Title}`}data-poster={`${movie.Poster}`}data-year={`${movie.Year}`}onClick={(e) => addMovieToUser(e)}>Add</button>
+                        <button className="btn btn-primary btn-sm font-weight-bold float-right" data-title={`${movie.Title}`}data-poster={`${movie.Poster}`}data-year={`${movie.Year}`} onClick={(e) => addMovieToUser(e.target.dataset)}>Add</button>
                     </h4>
                 </div>
             </div>
@@ -39,4 +34,8 @@ const SResult = ({movie, index}) => {
     )
 }
 
-export default SResult
+SResult.propTypes = {
+    addMovieToUser: PropTypes.func.isRequired
+}
+
+export default connect(null, {addMovieToUser}) (SResult)

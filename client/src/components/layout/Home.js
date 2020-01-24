@@ -30,7 +30,7 @@ const Home = () => {
                             <div className="card-body" style={{backgroundImage: `${starwars_check}`}}>
                                 <div className="row">
                                     <div className="container">
-                                        <img src={starwars_check} width="100rem" alt="image" />
+                                        <img src={starwars_check} width="100rem" alt="" />
                                         <div >
                                             <h6 className="d-inline">Production: </h6>
                                             <p>20th Century Fox</p>    

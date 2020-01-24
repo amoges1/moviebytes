@@ -24,42 +24,25 @@ router.get('/me', auth, async (req, res) => {
 })
 
 // @route   POST api/profile/
-// @desc    Create/update user profile
-// @access  Private
+// @desc    Create user profile
+// @access  Private / DELETE!!!
 router.post('/', auth, async (req, res) => {
-    // extract body submission
-    const {
-        location,
-        movies,
-        twitter,
-        facebook,
-        instagram,
-        linkedin
-    } = req.body
+
 
     // Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
-    if(location) profileFields.location = location
-    if(movies) profileFields.movies = movies
+    if(movies) profileFields.movies = []
 
-    // Build social object
-    profileFields.social = {}
-    if(twitter) profileFields.social.twitter = twitter
-    if(facebook) profileFields.social.facebook = facebook
-    if(instagram) profileFields.social.instagram = instagram
-    if(linkedin) profileFields.social.linkedin = linkedin
-
-    
     try {
         // Find Profile
-        let profile = await Profile.findOne({ user: req.user.id })
-        if(profile) {
-            // Update w/ submitted information
-            profile = await Profile.findOneAndUpdate({ user: req.user.id }, {$set: profileFields}, { new: true})
+        // let profile = await Profile.findOne({ user: req.user.id })
+        // if(profile) {
+        //     // Update w/ submitted information
+        //     profile = await Profile.findOneAndUpdate({ user: req.user.id }, {$set: profileFields}, { new: true})
 
-            return res.json(profile)
-        }
+        //     return res.json(profile)
+        // }
 
         // Create profile w/ submitted information
         profile = new Profile(profileFields);
@@ -74,7 +57,7 @@ router.post('/', auth, async (req, res) => {
 
 // @route   POST api/profile/
 // @desc    Get all profiles
-// @access  Public
+// @access  Public / Unneeded!!
 router.get('/', async (req, res) => {
     try {
         const profiles = await Profile.find().populate('user', ['name'])
@@ -124,40 +107,19 @@ router.delete('/', auth, async (req, res) => {
 // @route   PUT api/profile/addmovie
 // @desc    Add movies to user's profile
 // @access  Private
-router.put('/movies', [auth, [
-    check('Watched', 'Did you watch it?').not().isEmpty()
-]], async (req, res) => {
-    const errors = validationResult(req)
-    if(!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()})
-    }
-    
-    const {
-        Title, Released, Runtime, Rated, Director, Plot, Poster,
-        Ratings, Metascore, Production, Watched, Review, Score
-    } = req.body
-    
-    const movie = {
-        Title,
-        Released,
-        Runtime,
-        Rated,
-        Director,
-        Plot,
-        Poster,
-        Ratings,
-        Metascore,
-        Production,
-        Watched,
-        Review,
-        Score
-    }
+router.put('/addmovie', auth, async (req, res) => {
 
+    const { title, poster, year } = req.body.movie
+    const movie = { title, poster, year }
     try {
         //find user profile
         const profile = await Profile.findOne({user: req.user.id})
-        profile.movies.unshift(movie)
+        console.log(profile.movies);
+        
+        profile.movies.push(movie)
         await profile.save();
+        console.log(profile.movies);
+
         res.json(profile)
     } catch (err) {
         console.error(err.message);

@@ -9,6 +9,8 @@ const {
 } = require('express-validator')
 
 const User = require('../../models/User')
+const Profile = require('../../models/Profile')
+
 // @route   POST api/users
 // @desc    User registration
 // @access  Public
@@ -50,6 +52,12 @@ router.post('/', [
         user.password = await bcrypt.hash(password, salt); 
 
         await user.save() //use await instead of promise.then
+
+        const profileFields = {};
+        profileFields.user = user.id;
+        profileFields.movies = []
+        profile = new Profile(profileFields);
+        await profile.save();
 
         const payload = {
             user: {

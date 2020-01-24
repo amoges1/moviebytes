@@ -1,43 +1,25 @@
 const mongoose = require('mongoose')
 
 const MovieSchema = new mongoose.Schema({
-    Title: {
-        type: String
+    title: {
+        type: String,
+        required: true
     },
-    Released: {
-        type: String
+    poster: {
+        type: String,
+        required: true
     },
-    Runtime: {
-        type: String
+    year: {
+        type: Number,
+        required: true
     },
-    Rated: {
-        type: String
-    },
-    Director: {
-        type: String
-    },
-    Plot: {
-        type: String
-    },
-    Poster: {
-        type: String
-    },
-    Ratings: {
-        type: Array
-    },
-    Metascore: {
-        type: Number
-    },
-    Production: {
-        type: String
-    },
-    Watched: {
+    watched: {
         type: Boolean
     },
-    Review: {
+    review: {
         type: String
     },
-    Score : {
+    score : {
         type: Number
     }
     
@@ -48,24 +30,7 @@ const ProfileSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, // connect to UserSchema's ObjectID
         ref: 'user' //reference to User model
     },
-    location: {
-        type: String
-    },
     movies: [MovieSchema],
-    social: {
-        twitter: {
-            type:String
-        },
-        facebook: {
-            type: String
-        },
-        instagram: {
-            type: String
-        },
-        linkedin: {
-            type: String
-        }
-    },
     date: {
         type: Date,
         default: Date.now
