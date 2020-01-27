@@ -12,6 +12,7 @@ import {
     LOGIN_FAIL,
     LOGOUT
 } from './types';
+import { loadMovies } from './movies'
 import setAuthToken from '../utils/setAuthToken'
 
 // Load User
@@ -26,6 +27,7 @@ export const loadUser = () => async dispatch => {
             type: USER_LOADED,
             payload: res.data
         })
+        dispatch(loadMovies())
     } catch (err) {
         dispatch({
             type: AUTH_ERROR

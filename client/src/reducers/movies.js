@@ -1,4 +1,5 @@
 import {
+    MOVIES_LOADED,
     ADD_MOVIE,
     DELETE_MOVIE,
     UPDATE_REVIEW,
@@ -13,6 +14,11 @@ const initState = {
 export default function(state = initState, action) {
     const { type, payload } = action
     switch (type) {
+        case MOVIES_LOADED:
+            return {
+                ...state,
+                movies: payload
+            }
         case ADD_MOVIE:
         case UPDATE_REVIEW:
         case DELETE_MOVIE:

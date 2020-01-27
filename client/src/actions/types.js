@@ -9,6 +9,7 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_FAIL = 'LOGIN_FAIL'
 export const LOGOUT = 'LOGOUT'
 
+export const MOVIES_LOADED = 'MOVIES_LOADED'
 export const ADD_MOVIE = 'ADD_MOVIE'
 export const DELETE_MOVIE = 'DELETE_MOVIE'
 export const UPDATE_REVIEW = 'UPDATE_REVIEW'
