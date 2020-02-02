@@ -23,51 +23,6 @@ router.get('/me', auth, async (req, res) => {
     }
 })
 
-// @route   POST api/profile/
-// @desc    Create user profile
-// @access  Private / DELETE!!!
-router.post('/', auth, async (req, res) => {
-
-
-    // Build profile object
-    const profileFields = {};
-    profileFields.user = req.user.id;
-    if(movies) profileFields.movies = []
-
-    try {
-        // Find Profile
-        // let profile = await Profile.findOne({ user: req.user.id })
-        // if(profile) {
-        //     // Update w/ submitted information
-        //     profile = await Profile.findOneAndUpdate({ user: req.user.id }, {$set: profileFields}, { new: true})
-
-        //     return res.json(profile)
-        // }
-
-        // Create profile w/ submitted information
-        profile = new Profile(profileFields);
-        await profile.save();
-        res.json(profile)
-
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error')
-    }
-})
-
-// @route   POST api/profile/
-// @desc    Get all profiles
-// @access  Public / Unneeded!!
-router.get('/', async (req, res) => {
-    try {
-        const profiles = await Profile.find().populate('user', ['name'])
-        res.json(profiles)
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error')
-    }
-})
-
 // @route   POST api/profile/user/:user_id
 // @desc    Get profile by user ID
 // @access  Public
@@ -127,30 +82,22 @@ router.put('/addmovie', auth, async (req, res) => {
     }
 })
 
-// @route   PUT api/profile/movies/:mov_id
+// @route   PUT api/profile/movies/:movieID
 // @desc    Update movie from user's profile
 // @access  Private
-router.put('/movies/:mov_id', [ auth, [
-    check('Watched', 'Did you watch it?').not().isEmpty(),
-]], async(req, res) => {
-    const errors = validationResult(req)
-    if(!errors.isEmpty()) {
-        return res.status(400).json({errors: errors.array()})
-    }
-
+router.put('/updatemovie/:movieID', auth, async(req, res) => {
     const {
-        Watched,
-        Review,
-        Score
-    } = req.body
+        score,
+        review
+    } = req.body.updates
 
     try {
+
         const profile = await Profile.findOne({user: req.user.id})
-        
-        const updateIndex = profile.movies.map(item => item.id).indexOf(req.params.mov_id)
-        profile.movies[updateIndex]["Watched"] = Watched 
-        profile.movies[updateIndex]["Review"] = Review 
-        profile.movies[updateIndex]["Score"] = Score 
+        console.log("profile.movies", profile);
+        const updateIndex = profile.movies.map(item => item.id).indexOf(req.params.movieID)
+        profile.movies[updateIndex]["score"] = score 
+        profile.movies[updateIndex]["review"] = review 
         
         await profile.save()
         res.json(profile)
@@ -174,8 +121,7 @@ router.delete('/movies/:mov_id', auth, async(req, res) => {
         await profile.save()
         res.json(profile)
     } catch (err) {
-        console.error(err.message);
-        
+        console.error(err.message); 
     }
 })
 module.exports = router;

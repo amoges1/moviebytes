@@ -15,18 +15,14 @@ export const loadMovies = () => async dispatch => {
 
     try {
         const res = await axios.get('/api/profile/me')
-        console.log("here:...", res.data);
-        
         dispatch({
             type: MOVIES_LOADED,
             payload: res.data
         })
     } catch (err) {
         console.error(err);
-        
         // const errors = err.response.data.errors; //errors array
         // if(errors) errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
-
     }
 }
 // Add Movie
@@ -39,7 +35,6 @@ export const addMovieToUser = (movie) => async dispatch => {
             'Content-Type': 'application/json'
         }
     }
-    // console.log("ADD MOVIE: ", movie);
     
     const body = JSON.stringify({movie})
     
@@ -47,9 +42,7 @@ export const addMovieToUser = (movie) => async dispatch => {
         //set up API endpoint to receive movie information,
         //receive full movie list array to pass to dispatch
         const res = await axios.put('/api/profile/addmovie', body, config)
-        // console.log("this is: ",res.data);
         
-
         dispatch({
             type: ADD_MOVIE,
             payload: res.data
@@ -61,6 +54,30 @@ export const addMovieToUser = (movie) => async dispatch => {
         
     }
 }
-
-//2. Perform your actions, receive new data, then dispatch 
+// Update Moview Review
+export const updateMovieReview = (movieID, updates) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token)
+    }
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    const body = JSON.stringify({updates})
+    console.log("here");
+    
+    try {
+        const res = await axios.put(`/api/profile/updatemovie/${movieID}`, body, config)
+        console.log("updated: ", res.data);
+        
+        dispatch({
+            type: UPDATE_REVIEW,
+            payload: res.data
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+//2. Request to RestAPI, Receive new data, Pass to dispatch to update data store 
 

@@ -3,10 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { addMovieToUser } from '../../actions/movies'
 
-
-
-
-
 const SResult = ({movie, index, addMovieToUser}) => {
     
     return (

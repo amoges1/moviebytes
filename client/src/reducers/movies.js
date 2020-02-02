@@ -15,10 +15,6 @@ export default function(state = initState, action) {
     const { type, payload } = action
     switch (type) {
         case MOVIES_LOADED:
-            return {
-                ...state,
-                movies: payload
-            }
         case ADD_MOVIE:
         case UPDATE_REVIEW:
         case DELETE_MOVIE:
