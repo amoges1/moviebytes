@@ -65,14 +65,29 @@ export const updateMovieReview = (movieID, updates) => async dispatch => {
         }
     }
     const body = JSON.stringify({updates})
-    console.log("here");
     
     try {
         const res = await axios.put(`/api/profile/updatemovie/${movieID}`, body, config)
-        console.log("updated: ", res.data);
         
         dispatch({
             type: UPDATE_REVIEW,
+            payload: res.data
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export const deleteMovie = (movieID) => async dispatch => {
+    if (localStorage.token) {
+        setAuthToken(localStorage.token)
+    }
+    
+    try {
+        const res = await axios.delete(`/api/profile/${movieID}`)
+        
+        dispatch({
+            type: DELETE_MOVIE,
             payload: res.data
         })
     } catch (err) {

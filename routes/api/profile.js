@@ -107,15 +107,15 @@ router.put('/updatemovie/:movieID', auth, async(req, res) => {
     }
 })
 
-// @route   DELETE api/profile/movies/:mov_id
+// @route   DELETE api/profile/movies/::movieID
 // @desc    Delete movie from user's profile
 // @access  Private
-router.delete('/movies/:mov_id', auth, async(req, res) => {
+router.delete('/:movieID', auth, async(req, res) => {
     try {
         const profile = await Profile.findOne({user: req.user.id})
 
-        // Get remove index by mapping movies' ids, then find indexOf desired mov_id
-        const removeIndex = profile.movies.map(item => item.id).indexOf(req.params.mov_id)
+        // Get remove index by mapping movies' ids, then find indexOf desired movieID
+        const removeIndex = profile.movies.map(item => item.id).indexOf(req.params.movieID)
         
         profile.movies.splice(removeIndex, 1); //removeIndex found
         await profile.save()

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types' 
-import { updateMovieReview } from '../../actions/movies';
+import { updateMovieReview, deleteMovie } from '../../actions/movies';
 
 const handleMovieUpdates = (e, updateMovieReview) => {
     e.preventDefault()
@@ -10,11 +10,10 @@ const handleMovieUpdates = (e, updateMovieReview) => {
         score: document.querySelector(`[data-score="${movieID}"]`).value,
         review: document.querySelector(`[data-review="${movieID}"]`).value
     }
-
     updateMovieReview(movieID, updates)   
 }
 
-const Home = ({movies: {movies}, updateMovieReview}) => {
+const Home = ({movies: {movies}, updateMovieReview, deleteMovie}) => {
     return (
         <div>
             <div className="container-fluid p-3" style={{background: "#111111"}}>
@@ -67,6 +66,7 @@ const Home = ({movies: {movies}, updateMovieReview}) => {
                                             <h5 className="d-inline"><span className="badge badge-primary">Watched</span></h5>
                                             <h4 className="d-inline">
                                                 <button className="btn btn-primary btn-sm font-weight-bold float-right" onClick={(e) => handleMovieUpdates(e, updateMovieReview)} data-key={`${movie._id}`}>Save</button>
+                                                <button className="btn btn-warning btn-sm font-weight-bold float-right" onClick={(e) => deleteMovie(e.target.dataset.key)} data-key={`${movie._id}`}>Delete</button>
                                             </h4>
                                         </div>
                                     </div>
@@ -83,11 +83,12 @@ const Home = ({movies: {movies}, updateMovieReview}) => {
 
 Home.propTypes = {
     movies: PropTypes.object.isRequired,
-    updateMovieReview: PropTypes.func.isRequired
+    updateMovieReview: PropTypes.func.isRequired,
+    deleteMovie: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     movies: state.movies
 })
 
-export default connect(mapStateToProps, {updateMovieReview})(Home)
+export default connect(mapStateToProps, {updateMovieReview, deleteMovie})(Home)
