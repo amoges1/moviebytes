@@ -19,7 +19,7 @@ const Search = () => {
 
     const onSubmit = async e => {
         e.preventDefault()
-        const query = `http://www.omdbapi.com/?apikey=93ad5a12&s=${movie}&plot=full`
+        const query = `https://www.omdbapi.com/?apikey=93ad5a12&s=${movie}&plot=full`
 
         const data = await fetch(query).then(res => res.json()) 
         console.log(data);
