@@ -1,10 +1,13 @@
 const express = require("express");
-const connectDB = require('./config/db')
+const dbclient = require('./config/db')
 const path = require("path")
 const app = express();
 
 // Connect Database
-connectDB();
+dbclient.connect(err => {
+    if(err) console.log(err);
+    console.log("MongoDB Connected...")
+});
 
 // Init Middleware
 app.use(express.json({ extended: false}))
