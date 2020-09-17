@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs')
+const auth = require('../middleware/auth')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const {
@@ -8,19 +9,30 @@ const {
     validationResult
 } = require('express-validator')
 
-const User = require('../../models/User')
-const Profile = require('../../models/Profile')
+const User = require('../models/User')
 
-// @route   POST api/users
-// @desc    User registration
+// @route   GET api/auth
+// @desc    Test route
+// @access  Public
+// add auth middleware to protect route
+router.get('/', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch(err) {
+        console.error(err.message);
+        res.status(500).send('Server Error')
+        
+    }
+})
+
+// @route   POST api/auth
+// @desc    Authenticate User & Get Token
 // @access  Public
 router.post('/', [
     //based on express validator check doc
-    check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Please enter a password with 6 or more characters').isLength({
-        min: 6
-    })
+    check('password', 'Password is required').exists()
 ], async (req, res) => {
     const errors = validationResult(req) //compare from above
     if (!errors.isEmpty()) {
@@ -29,39 +41,25 @@ router.post('/', [
         }) // bad request
     }
 
-    const {
-        name,
-        email,
-        password
-    } = req.body
+    const { email, password } = req.body
 
     try {
 
         // Find user
         let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ errors: [{msg: 'User already exists' }]})
+        if (!user) {
+            return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
         }
 
-        //create User
-        user = new User({
-            name, email, password
-        })
+        const isMatch = await bcrypt.compare(password, user.password)
 
-        const salt = await bcrypt.genSalt(10); //recommended 10, higher better; used for hashing
-        user.password = await bcrypt.hash(password, salt); 
-
-        await user.save() //use await instead of promise.then
-
-        const profileFields = {};
-        profileFields.user = user.id;
-        profileFields.movies = []
-        profile = new Profile(profileFields);
-        await profile.save();
+        if (!isMatch) {
+            return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
+        }
 
         const payload = {
             user: {
-                id: user.id                
+                id: user.id           
             }
         }
 
@@ -74,5 +72,4 @@ router.post('/', [
         return res.status(500).send('Server error');
     }
 })
-
 module.exports = router;

@@ -21,8 +21,6 @@ export const loadMovies = () => async dispatch => {
         })
     } catch (err) {
         console.error(err);
-        // const errors = err.response.data.errors; //errors array
-        // if(errors) errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
     }
 }
 // Add Movie
@@ -41,6 +39,9 @@ export const addMovieToUser = (movie) => async dispatch => {
     try {
         //set up API endpoint to receive movie information,
         //receive full movie list array to pass to dispatch
+
+        // check if movie is in collection
+        const check = null;
         const res = await axios.put('/api/profile/addmovie', body, config)
         
         dispatch({

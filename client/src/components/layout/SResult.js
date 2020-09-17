@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import { addMovieToUser } from '../../actions/movies'
 
-const SResult = ({movie, index, addMovieToUser}) => {
+const SResult = ({movie, addMovieToUser}) => {
     
     return (
         <div className="col-md-4 p-3" key={`${movie._id}`}>

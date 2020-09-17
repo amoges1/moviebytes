@@ -1,5 +1,5 @@
 const express = require("express");
-const dbclient = require('./config/db')
+const dbclient = require('./db')
 const path = require("path")
 const app = express();
 
@@ -13,9 +13,9 @@ dbclient.connect(err => {
 app.use(express.json({ extended: false}))
 
 // Define routes
-app.use('/api/users', require('./routes/api/users'))
-app.use('/api/auth', require('./routes/api/auth'))
-app.use('/api/profile', require('./routes/api/profile'))
+app.use('/api/users', require('./api/users'))
+app.use('/api/auth', require('./api/auth'))
+app.use('/api/profile', require('./api/profile'))
 
 // Serve static assets in production
 

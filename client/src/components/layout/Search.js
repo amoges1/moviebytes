@@ -53,7 +53,7 @@ const Search = () => {
             <div className="row">
             {
                 results.map( (movie, id) => {
-                    return <SResult movie={movie} key={id} index={id}/>
+                    return <SResult movie={movie} key={id}/>
                 })
             }
         </div>

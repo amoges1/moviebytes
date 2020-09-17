@@ -4,8 +4,8 @@
     "description": "platform for users to create, share and review movies",
     "main": "server.js",
     "scripts": {
-        "start": "node server",
-        "server": "nodemon server",
+        "start": "cd server && node index.js",
+        "server": "cd server && nodemon index.js",
         "client": "npm start --prefix client", 
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
