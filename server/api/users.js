@@ -4,19 +4,13 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const dbclient = require("../db")
-const {
-    check,
-    validationResult
-} = require('express-validator')
+const auth = require("../middleware/auth")
+const { check, validationResult } = require('express-validator')
 
-const User = require('../models/User')
-const Profile = require('../models/Profile')
-
-
-// @route   POST api/users
-// @desc    User registration
+// @route   POST api/register
+// @desc    Create User & Get Token
 // @access  Public
-router.post('/', [
+router.post('/register', [
     //based on express validator check doc
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
@@ -24,46 +18,39 @@ router.post('/', [
         min: 6
     })
 ], async (req, res) => {
-    const errors = validationResult(req) //compare from above
+    //confirm errors
+    const errors = validationResult(req) 
     if (!errors.isEmpty()) {
         return res.status(400).json({
             errors: errors.array()
-        }) // bad request
+        }) 
     }
 
-    const {
-        name,
-        email,
-        password
-    } = req.body
-    return res.send(req.body)
     try {
 
         // Find user
-        let user = await User.findOne({ email });
+        const user = await dbclient.db("moviebytes").collection("users").findOne({email: req.body.email})
         if (user) {
             return res.status(400).json({ errors: [{msg: 'User already exists' }]})
         }
 
-        //create User
-        user = new User({
-            name, email, password
-        })
-
+        const newUser = {
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password
+        }
         const salt = await bcrypt.genSalt(10); //recommended 10, higher better; used for hashing
-        user.password = await bcrypt.hash(password, salt); 
+        newUser.password = await bcrypt.hash(newUser.password, salt); 
+        const insertedUser = await dbclient.db("moviebytes").collection("users").insertOne(newUser)
 
-        await user.save() //use await instead of promise.then
+        // create profile fo ruser
+        const user_id = insertedUser.ops[0]._id
+        await dbclient.db("moviebytes").collection("profiles").insertOne({user_id: user_id, email: newUser.email, movies: []})
 
-        const profileFields = {};
-        profileFields.user = user.id;
-        profileFields.movies = []
-        profile = new Profile(profileFields);
-        await profile.save();
-
-        const payload = {
-            user: {
-                id: user.id                
+        const payload = { 
+            user: { 
+                id: user_id,
+                email: newUser.email 
             }
         }
 
@@ -77,4 +64,62 @@ router.post('/', [
     }
 })
 
+// @route   POST api/login
+// @desc    Authenticate User & Get Token
+// @access  Public
+router.post('/login', [
+    //based on express validator check doc
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists()
+], async (req, res) => {
+    const errors = validationResult(req) 
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            errors: errors.array()
+        }) // bad request
+    }
+
+    try {
+        // Find user
+        const user = await dbclient.db("moviebytes").collection("users").findOne({ Eemail: req.body.email });
+        
+        if (!user) {
+            return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
+        }
+
+        const isMatch = await bcrypt.compare(req.body.password, user.password)
+
+        if (!isMatch) {
+            return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
+        }
+
+        const payload = {
+            user: {
+                id: user.id,
+                email: user.email           
+            }
+        }
+
+        jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 36000 }, (err, token) => { // 3600 = 1 hour, optional
+            if(err) throw err;
+            res.json({token})
+        }) 
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).send('Server error');
+    }
+})
+
+// @route   DELETE api/deactivate
+// @desc    Delete User and Profile
+// @access  Private
+router.delete("/deactivate", auth, async (req, res) => {
+    try {
+        await dbclient.db("moviebytes").collection("profiles").deleteOne({email: req.user.email})
+        await dbclient.db("moviebytes").collection("users").deleteOne({email: req.user.email})
+        res.status(200).json("User deleted")
+    } catch (err) {
+        console.log(err.message);
+    }
+})
 module.exports = router;

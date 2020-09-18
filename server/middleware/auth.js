@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
     // Verify/decode token
     try {
         const decoded = jwt.verify(token, config.get('jwtSecret'));
-
+        
         //used for future routes
         req.user = decoded.user //payload set in user.js
         next();
