@@ -4,10 +4,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 const dbclient = require("../db")
-const auth = require("../middleware/auth")
+const auth = require("./auth")
 const { check, validationResult } = require('express-validator')
 
-// @route   POST api/register
+// @route   POST api/users/register
 // @desc    Create User & Get Token
 // @access  Public
 router.post('/register', [
@@ -64,7 +64,7 @@ router.post('/register', [
     }
 })
 
-// @route   POST api/login
+// @route   POST api/users/login
 // @desc    Authenticate User & Get Token
 // @access  Public
 router.post('/login', [
@@ -81,7 +81,7 @@ router.post('/login', [
 
     try {
         // Find user
-        const user = await dbclient.db("moviebytes").collection("users").findOne({ Eemail: req.body.email });
+        const user = await dbclient.db("moviebytes").collection("users").findOne({ email: req.body.email });
         
         if (!user) {
             return res.status(400).json({ errors: [{msg: 'Invalid Credentials' }]})
@@ -110,7 +110,7 @@ router.post('/login', [
     }
 })
 
-// @route   DELETE api/deactivate
+// @route   DELETE api/users/deactivate
 // @desc    Delete User and Profile
 // @access  Private
 router.delete("/deactivate", auth, async (req, res) => {
