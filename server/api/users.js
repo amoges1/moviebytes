@@ -50,7 +50,8 @@ router.post('/register', [
         const payload = { 
             user: { 
                 id: user_id,
-                email: newUser.email 
+                email: newUser.email,
+                name: newUser.name 
             }
         }
 
@@ -96,7 +97,8 @@ router.post('/login', [
         const payload = {
             user: {
                 id: user.id,
-                email: user.email           
+                email: user.email,
+                name: user.name           
             }
         }
 
@@ -107,6 +109,22 @@ router.post('/login', [
     } catch (err) {
         console.error(err.message);
         return res.status(500).send('Server error');
+    }
+})
+
+// @route   GET api/users/user
+// @desc    Get User Info
+// @access  Private
+router.get("/user", auth, async (req, res) => {
+    try {
+        const user = dbclient.db("moviebytes").collection("users").findOne({email: req.user.email}, {"_id": 0, "password": 0})
+        // or simply decode
+        //const decoded = jwt.verify(token, config.get('jwtSecret'));
+        //console.log(decoded.user)
+        console.log(user);
+        res.status(200).json({user})
+    } catch (err) {
+        console.log(err.message);
     }
 })
 

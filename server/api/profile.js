@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('./auth')
 const dbclient = require("../db")
 
-// @route   GET api/profile/me
+// @route   GET api/profile/user
 // @desc    Get current user's profile
 // @access  Private
 router.get('/user', auth, async (req, res) => {

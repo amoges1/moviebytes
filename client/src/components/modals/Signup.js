@@ -29,26 +29,7 @@ const Signup = ({setAlert, register, isAuthed }) => {
         if(password !== password2) {
             setAlert("Passwords don't match", 'danger');
         } else {
-            console.log('SUCCESS');
             register({ name, email, password })
-            // Below is used if not using Redux action
-            // const newUser = {
-            //     name, email, password
-            // }
-            // try {
-            //     const config = {
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         }
-            //     }
-
-            //     const body = JSON.stringify(newUser)
-            //     const res = await axios.post('/api/users', body, config)
-            //     console.log(res.data); //should receive token!
-                
-            // } catch (err) {
-            //     console.error();
-            // }
         }
     }
     if(isAuthed) {

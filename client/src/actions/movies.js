@@ -14,7 +14,7 @@ export const loadMovies = () => async dispatch => {
     }
 
     try {
-        const res = await axios.get('/api/profile/me')
+        const res = await axios.get('/api/profile/user')
         dispatch({
             type: MOVIES_LOADED,
             payload: res.data
