@@ -100,5 +100,21 @@ export const logout = () => dispatch => {
     dispatch({
         type: LOGOUT
     })
+}
+
+// Logout / Delete User
+export const deactivate = async() => {
+  
+    const config = {
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
+    try {
+        await axios.delete("api/users/deactivate", config)
+        logout()
+    } catch (err) {
+        console.log(err.message);
+    }
 
 }

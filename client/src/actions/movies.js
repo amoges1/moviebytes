@@ -37,12 +37,8 @@ export const addMovieToUser = (movie) => async dispatch => {
     const body = JSON.stringify({movie})
     
     try {
-        //set up API endpoint to receive movie information,
-        //receive full movie list array to pass to dispatch
-
-        // check if movie is in collection
-        const check = null;
-        const res = await axios.put('/api/profile/addmovie', body, config)
+        
+        const res = await axios.put('/api/profile/movies/add', body, config)
         
         dispatch({
             type: ADD_MOVIE,
@@ -56,7 +52,7 @@ export const addMovieToUser = (movie) => async dispatch => {
     }
 }
 // Update Moview Review
-export const updateMovieReview = (movieID, updates) => async dispatch => {
+export const updateMovieReview = (updates) => async dispatch => {
     if (localStorage.token) {
         setAuthToken(localStorage.token)
     }
@@ -66,9 +62,9 @@ export const updateMovieReview = (movieID, updates) => async dispatch => {
         }
     }
     const body = JSON.stringify({updates})
-    
+ 
     try {
-        const res = await axios.put(`/api/profile/updatemovie/${movieID}`, body, config)
+        const res = await axios.put('/api/profile/movies/update', body, config)
         
         dispatch({
             type: UPDATE_REVIEW,
@@ -79,13 +75,20 @@ export const updateMovieReview = (movieID, updates) => async dispatch => {
     }
 }
 
-export const deleteMovie = (movieID) => async dispatch => {
+export const deleteMovie = (movie) => async dispatch => {
     if (localStorage.token) {
         setAuthToken(localStorage.token)
     }
-    
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    const body = JSON.stringify({movie})
+    console.log("movie: ", body);
+
     try {
-        const res = await axios.delete(`/api/profile/${movieID}`)
+        const res = await axios.delete('/api/profile/movies/delete', body, config)
         
         dispatch({
             type: DELETE_MOVIE,

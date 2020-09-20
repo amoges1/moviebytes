@@ -58,9 +58,10 @@ router.put('/movies/update', auth, async(req, res) => {
 // @desc    Delete movie from user's profile
 // @access  Private
 router.delete('/movies/delete', auth, async(req, res) => {
+    console.log("received ", req.body.movie);
+    const { title, year } = req.body.movie
     try {
-        const { title, year} = req.body.movie
-
+        
         const profile = await dbclient.db("moviebytes").collection("profiles").findOne({email: req.user.email})
         const movie = profile.movies.filter(movie => movie.title == title && movie.year == year)
         if(movie.length == 0) return res.status(400).json({msg: "Movie not found"})

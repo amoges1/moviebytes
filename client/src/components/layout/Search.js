@@ -32,11 +32,15 @@ const Search = () => {
 
     return (
 
-        <div className="container pt-3 border-bottom">
+        <div className="container border-bottom">
             <form onSubmit={e => onSubmit(e)}>
                 <Alert />
+                <div className="container-fluid p-3 mt-2">
+                <h1 class="display-5 text-center">Find Your Movies</h1>
+
+                </div>
                 <div className="form-group">
-                    <h4 className="p-2 text-center font-weight-bold">Find your favorite movies!</h4>
+                    {/* <h4 className="p-2 text-center font-weight-bold"></h4> */}
                     <div className="input-group mb-3">
                         <input type="text" className="form-control" placeholder="Ex: Star Wars" name="movie" id="term" value={movie} onChange={e => onChange(e)} required/>
                         <div className="input-group-append">
