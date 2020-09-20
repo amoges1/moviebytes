@@ -10,7 +10,7 @@ const SResult = ({movie, addMovieToUser}) => {
             <div className="card">
                 <div className="card-header" style={{background: "#F56600"}}>
                 <div>
-                    <h5 className="d-inline">{movie.Title} </h5>
+                    <h5 className="d-inline text-white font-weight-bold">{movie.Title} </h5>
                 </div>
             </div>
             <div className="card-body" style={{backgroundImage: `${movie.poster}`}}>
