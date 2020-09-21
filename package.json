@@ -4,7 +4,7 @@
     "description": "platform for users to create, share and review movies",
     "main": "server.js",
     "scripts": {
-        "start": "cd server && node index.js",
+        "start": "\"npm run client\"",
         "server": "cd server && nodemon index.js",
         "client": "cd client && npm start",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
