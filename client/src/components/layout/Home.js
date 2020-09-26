@@ -23,6 +23,7 @@ const handleMovieDelete = (e, deleteMovie) => {
       title: document.querySelector(`[data-title="${movieID}"]`).innerHTML.trim(),
       year: document.querySelector(`[data-year="${movieID}"]`).innerHTML.trim(),
     };
+
     deleteMovie(movie);
   };
 
@@ -36,7 +37,7 @@ const Home = ({ movies: { movies }, updateMovieReview, deleteMovie }) => {
 
       <div className="container">
         <div className="row">
-          {movies.length === 0 ? (
+          {movies && movies.length === 0 ? (
             <h1>Add some movies!</h1>
           ) : (
             movies.movies.map((movie) => {

@@ -48,7 +48,7 @@ const Landing = () => {
                 <div className="row">
                     <div className="col-md-4 text-center">
                         <h3 className="display-5">Create Account</h3>
-                        <p>Sign up today to list your favorite-seen or not seen movies.</p>
+                        <p>Sign up today to track your favorite-seen or unseen movies.</p>
                     </div>
                     <div className="col-md-4 text-center">
                         <h3 className="display-5">Search Movies</h3>
@@ -56,7 +56,7 @@ const Landing = () => {
                     </div>
                     <div className="col-md-4 text-center">
                         <h3 className="display-5">Review Selections</h3>
-                        <p>Write personal reviews as you continue your movie watching journey.</p>
+                        <p>Write reviews as you continue your movie watching journey.</p>
                     </div>
                 </div>
             </div>

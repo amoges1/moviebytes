@@ -39,12 +39,12 @@ export const addMovieToUser = (movie) => async dispatch => {
     try {
         
         const res = await axios.put('/api/profile/movies/add', body, config)
-        
+        alert("Movie has been added!")
         dispatch({
             type: ADD_MOVIE,
             payload: res.data
         }) 
-
+        
     } catch (err) {
         const errors = err.response.data.errors; //errors array
         if(errors) errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
@@ -85,15 +85,15 @@ export const deleteMovie = (movie) => async dispatch => {
         }
     }
     const body = JSON.stringify({movie})
-    console.log("movie: ", body);
 
     try {
-        const res = await axios.delete('/api/profile/movies/delete', body, config)
-        
+        const res = await axios.put('/api/profile/movies/delete', body, config)
+        alert("Movie has been deleted!")
         dispatch({
             type: DELETE_MOVIE,
             payload: res.data
         })
+
     } catch (err) {
         console.error(err);
     }

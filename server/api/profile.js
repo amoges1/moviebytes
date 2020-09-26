@@ -57,8 +57,7 @@ router.put('/movies/update', auth, async(req, res) => {
 // @route   DELETE api/profile/movies/delete
 // @desc    Delete movie from user's profile
 // @access  Private
-router.delete('/movies/delete', auth, async(req, res) => {
-    console.log("received ", req.body.movie);
+router.put('/movies/delete', auth, async(req, res) => {
     const { title, year } = req.body.movie
     try {
         
