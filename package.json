@@ -4,7 +4,7 @@
     "description": "platform for users to create, share and review movies",
     "main": "server.js",
     "scripts": {
-        "server": "cd server && nodemon index.js",
+        "server": "cd server && node index.js",
         "client": "cd client && npm start",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "heroku-postbuild": "cd client && npm i && npm run build"
