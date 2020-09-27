@@ -4,7 +4,7 @@
     "description": "platform for users to create, share and review movies",
     "main": "server.js",
     "scripts": {
-        "server": "cd server && node index.js",
+        "server": "cd server && nodemon index.js",
         "client": "cd client && npm start",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "heroku-postbuild": "cd client && npm i && npm run build"
@@ -16,11 +16,9 @@
         "config": "^3.2.4",
         "express": "^4.17.1",
         "express-validator": "^6.3.0",
+        "nodemon": "^2.0.2",
         "jsonwebtoken": "^8.5.1",
         "request": "^2.88.0",
         "concurrently": "^5.0.2"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.2"
     }
 }
