@@ -93,7 +93,6 @@ export const deleteMovie = (movie) => async dispatch => {
             type: DELETE_MOVIE,
             payload: res.data
         })
-
     } catch (err) {
         console.error(err);
     }
