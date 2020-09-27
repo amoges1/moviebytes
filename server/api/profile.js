@@ -23,7 +23,10 @@ router.get('/user', auth, async (req, res) => {
 router.put('/movies/add', auth, async (req, res) => {
     try {
         //add movie
-        const profile = await dbclient.db("moviebytes").collection("profiles").updateOne({email: req.user.email},{ $addToSet: {movies: req.body.movie }})
+        await dbclient.db("moviebytes").collection("profiles").updateOne({email: req.user.email},{ $addToSet: {movies: req.body.movie }})
+
+        const profile = await dbclient.db("moviebytes").collection("profiles").findOne({email: req.user.email})
+
         res.json(profile)
     } catch (err) {
         console.error(err.message);
@@ -48,7 +51,10 @@ router.put('/movies/update', auth, async(req, res) => {
             }}, {
                 multi:true, arrayFilters: [{"movie.title":title}]
             })
-        res.json("Success")
+        
+            //updatedProfile
+        const updatedProfile = await dbclient.db("moviebytes").collection("profiles").findOne({email: req.user.email})
+        res.json(updatedProfile)
     } catch (err) {
         console.error(err.message);
     }
@@ -72,7 +78,10 @@ router.put('/movies/delete', auth, async(req, res) => {
             })
         //Remove null value
         await dbclient.db("moviebytes").collection("profiles").updateOne({email: req.user.email}, {$pull: {movies:null}})
-        res.json("Success")
+        
+        //updatedProfile
+        const updatedProfile = await dbclient.db("moviebytes").collection("profiles").findOne({email: req.user.email})
+        res.json(updatedProfile)
     } catch (err) {
         console.error(err.message); 
     }
