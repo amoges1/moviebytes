@@ -4,14 +4,10 @@
     "description": "platform for users to create, share and review movies",
     "main": "server.js",
     "scripts": {
-        "start": "\"npm run client\"",
         "server": "cd server && nodemon index.js",
         "client": "cd client && npm start",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
-        "heroku-postbuild": "npm run install-client && npm run build",
-        "build": "cd client && npm run build",
-        "install-client": "cd client && npm install"
-
+        "heroku-postbuild": "cd client && npm i && npm run build"
     },
     "author": "Anteneh Moges",
     "license": "MIT",
